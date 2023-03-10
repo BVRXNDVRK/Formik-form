@@ -1,8 +1,23 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useField } from 'formik';
 import * as Yup from 'yup';
 
-const CustomForm = () => {  
+const MyTextInput = ({label, ...props}) => {
+    const [field, meta] = useField(props);
 
+    return (
+        <>
+            <label htmlFor={props.name}>{label}</label>
+            <input {...props} {...field}/>
+            {meta.touched && meta.error ? (
+                <div className="error">
+                    {meta.error}
+                </div>
+            ) : null}
+        </>
+    )
+}
+
+const CustomForm = () => {  
 
     return (
         <Formik 
@@ -35,20 +50,21 @@ const CustomForm = () => {
         onSubmit={values => console.log(JSON.stringify(values, null, 2))}>
             <Form className="form">
                 <h2>Отправить пожертвование</h2>
-                <label htmlFor="name">Ваше имя</label>
-                <Field
+
+                <MyTextInput
+                    label="Ваше ім'я"
                     id="name"
                     name="name"
                     type="text"
                 />
-                <ErrorMessage className="error" name="name" component="div"/>
-                <label htmlFor="email">Ваша почта</label>
-                <Field
+
+                <MyTextInput
+                    label="Ваша пошта"
                     id="email"
                     name="email"
                     type="email"
                 />
-                <ErrorMessage className="error" name="email" component="div"/>
+
                 <label htmlFor="amount">Количество</label>
                 <Field
                     id="amount"
